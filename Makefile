@@ -33,14 +33,14 @@ test-win32:
 	GOARCH=386 GOOS=windows go test
 
 releases: linux macos win64 win32
-	chmod +x $(BINDIR)/$(NAME)-*
+	chmod +x $(BINDIR)/$(NAME)-#
 	gzip $(BINDIR)/$(NAME)-linux
 	gzip $(BINDIR)/$(NAME)-macos
 	zip -m -j $(BINDIR)/$(NAME)-win32.zip $(BINDIR)/$(NAME)-win32.exe
 	zip -m -j $(BINDIR)/$(NAME)-win64.zip $(BINDIR)/$(NAME)-win64.exe
 
 clean:
-	rm $(BINDIR)/*
+	rm $(BINDIR)/ 
 
 # Remove trailing {} from the release upload url
 GITHUB_UPLOAD_URL=$(shell echo $${GITHUB_RELEASE_UPLOAD_URL%\{*})
@@ -50,3 +50,4 @@ upload: releases
 	curl -H "Authorization: token $(GITHUB_TOKEN)" -H "Content-Type: application/gzip" --data-binary @$(BINDIR)/$(NAME)-macos.gz  "$(GITHUB_UPLOAD_URL)?name=$(NAME)-macos.gz"
 	curl -H "Authorization: token $(GITHUB_TOKEN)" -H "Content-Type: application/zip"  --data-binary @$(BINDIR)/$(NAME)-win64.zip "$(GITHUB_UPLOAD_URL)?name=$(NAME)-win64.zip"
 	curl -H "Authorization: token $(GITHUB_TOKEN)" -H "Content-Type: application/zip"  --data-binary @$(BINDIR)/$(NAME)-win32.zip "$(GITHUB_UPLOAD_URL)?name=$(NAME)-win32.zip"
+ 
